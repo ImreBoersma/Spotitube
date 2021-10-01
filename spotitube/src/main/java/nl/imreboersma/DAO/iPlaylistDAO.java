@@ -2,7 +2,7 @@ package nl.imreboersma.DAO;
 
 import java.util.List;
 
-public interface iPlaylistDAO extends iDataSource {
+public interface iPlaylistDAO extends iDataMapper {
   List<?> getAllPlaylists(int userId);
 
   void deletePlaylist(int playlistId);

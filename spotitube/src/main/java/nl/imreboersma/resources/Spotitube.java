@@ -2,13 +2,14 @@ package nl.imreboersma.resources;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
-import javax.ws.rs.core.Response;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
 
-@Path("/")
+@Path("/login")
 class Spotitube {
   @GET
-  @Path("/login")
-  public Response login() {
-    return null;
+  @Produces(MediaType.TEXT_PLAIN)
+  public String login() {
+    return "Up and running";
   }
 }

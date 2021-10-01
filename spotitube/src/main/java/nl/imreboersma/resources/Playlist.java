@@ -7,8 +7,7 @@ import javax.ws.rs.core.Response;
 @Path("/playlist")
 class Playlist {
   @GET
-  @Path("/")
   public Response getAllPlaylists() {
-    return null;
+    return Response.ok().build();
   }
 }
