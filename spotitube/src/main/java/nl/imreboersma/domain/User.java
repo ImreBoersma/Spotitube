@@ -1,14 +1,15 @@
-package nl.imreboersma.DTO;
+package nl.imreboersma.domain;
 
-import java.security.Principal;
-
-public class User implements Principal {
+public class User {
   private int id;
   private String username;
   private String password;
   private String firstName;
   private String lastName;
   private String token;
+
+  public User() {
+  }
 
   public int getId() {
     return id;
@@ -18,16 +19,8 @@ public class User implements Principal {
     this.id = id;
   }
 
-  public String getUsername() {
-    return username;
-  }
-
   public void setUsername(String username) {
     this.username = username;
-  }
-
-  public String getPassword() {
-    return password;
   }
 
   public void setPassword(String password) {
@@ -58,8 +51,7 @@ public class User implements Principal {
     this.token = token;
   }
 
-  @Override
-  public String getName() {
-    return getUsername();
+  public String getFullName() {
+    return getFirstName() + " " + getLastName();
   }
 }

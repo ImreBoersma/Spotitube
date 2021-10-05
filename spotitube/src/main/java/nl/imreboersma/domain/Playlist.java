@@ -1,12 +1,12 @@
-package nl.imreboersma.DTO;
+package nl.imreboersma.domain;
 
-import java.util.List;
+import java.util.ArrayList;
 
 public class Playlist {
   private int id;
   private String name;
   private boolean owner;
-  private List<?> tracks;
+  private ArrayList<Track> tracks;
 
   public int getId() {
     return id;
@@ -24,7 +24,7 @@ public class Playlist {
     this.name = name;
   }
 
-  public boolean getOwner() {
+  public boolean isOwner() {
     return owner;
   }
 
@@ -32,11 +32,15 @@ public class Playlist {
     this.owner = owner;
   }
 
-  public List<?> getTracks() {
+  public ArrayList<Track> getTracks() {
     return tracks;
   }
 
-  public void setTracks(List<?> tracks) {
+  public void setTracks(ArrayList<Track> tracks) {
     this.tracks = tracks;
+  }
+
+  public void addTrack(Track track) {
+    tracks.add(track);
   }
 }

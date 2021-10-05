@@ -1,9 +1,12 @@
 package nl.imreboersma.DAO;
 
-import java.util.List;
+import nl.imreboersma.domain.Playlist;
+import nl.imreboersma.domain.Track;
 
-public interface iPlaylistDAO extends iDataMapper {
-  List<?> getAllPlaylists(int userId);
+import java.util.ArrayList;
+
+public interface iPlaylistDAO extends iDAO {
+  ArrayList<Playlist> getAllPlaylistsCheckOwner(int userId);
 
   void deletePlaylist(int playlistId);
 
@@ -11,7 +14,7 @@ public interface iPlaylistDAO extends iDataMapper {
 
   void editPlaylist(int playlistId, String name);
 
-  List<?> getAllTracks(int playlistId);
+  ArrayList<Track> getAllTracks(int playlistId);
 
   boolean exists(int playlistId);
 }
