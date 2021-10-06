@@ -19,10 +19,9 @@ import java.util.stream.Collectors;
 @Produces(MediaType.APPLICATION_JSON)
 @Path("/track")
 @VerifyToken
-class Track {
+public class Track {
   private iPlaylistDAO playlistDAO;
   private iTrackDAO trackDAO;
-
 
   @GET
   public Response all(@QueryParam("forPlaylist") int playlistId) {

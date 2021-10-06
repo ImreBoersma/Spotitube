@@ -18,11 +18,10 @@ import java.util.ArrayList;
 @Produces(MediaType.APPLICATION_JSON)
 @Path("/playlist")
 @VerifyToken
-class Playlist {
+public class Playlist {
   private iPlaylistDAO playlistDAO;
 
   @GET
-  @Path("/")
   public Response all(@Context VerifyTokenFilter verifyTokenFilter) {
     final User user = verifyTokenFilter.getUser();
     final ArrayList<nl.imreboersma.domain.Playlist> playlists = playlistDAO.getAllPlaylistsCheckOwner(user.getId());
