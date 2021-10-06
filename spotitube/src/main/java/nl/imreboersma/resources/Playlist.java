@@ -23,8 +23,8 @@ public class Playlist {
 
   @GET
   public Response all(@Context VerifyTokenFilter verifyTokenFilter) {
-    final User user = verifyTokenFilter.getUser();
-    final ArrayList<nl.imreboersma.domain.Playlist> playlists = playlistDAO.getAllPlaylistsCheckOwner(user.getId());
+    User user = verifyTokenFilter.getUser();
+    ArrayList<nl.imreboersma.domain.Playlist> playlists = playlistDAO.getAllPlaylistsCheckOwner(user.getId());
     return Response.ok().build();
   }
 }

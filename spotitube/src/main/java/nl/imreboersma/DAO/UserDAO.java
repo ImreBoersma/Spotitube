@@ -1,21 +1,23 @@
 package nl.imreboersma.DAO;
 
 import nl.imreboersma.domain.User;
+import nl.imreboersma.utils.DatabaseProperties;
 
-import javax.sql.DataSource;
 import javax.ws.rs.InternalServerErrorException;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.Optional;
 
 public class UserDAO implements iUserDAO {
-  private DataSource dataSource;
+  DatabaseProperties databaseProperties = new DatabaseProperties();
 
   @Override
   public Optional<User> login(String username, String password) {
-    try(Connection connection = dataSource.getConnection()) {
+    try {
+      Class.forName(databaseProperties.getDriver());
+    } catch(ClassNotFoundException e) {
+      e.printStackTrace();
+    }
+    try(Connection connection = DriverManager.getConnection(databaseProperties.getConnectionString())) {
       PreparedStatement statement = connection.prepareStatement("SELECT * FROM [user] WHERE [user].[username] = ? AND CONVERT(VARCHAR(128), HashBytes('SHA2_512', ?), 1)");
       statement.setString(1, username);
       statement.setString(2, password);
@@ -30,7 +32,12 @@ public class UserDAO implements iUserDAO {
 
   @Override
   public Optional<User> getUserFromToken(String token) {
-    try(Connection connection = dataSource.getConnection()) {
+    try {
+      Class.forName(databaseProperties.getDriver());
+    } catch(ClassNotFoundException e) {
+      e.printStackTrace();
+    }
+    try(Connection connection = DriverManager.getConnection(databaseProperties.getConnectionString())) {
       PreparedStatement statement = connection.prepareStatement("SELECT * FROM [user] WHERE [user].token = ?");
       statement.setString(1, token);
       ResultSet resultSet = statement.executeQuery();
@@ -42,11 +49,6 @@ public class UserDAO implements iUserDAO {
       throw new InternalServerErrorException();
     }
 
-  }
-
-  @Override
-  public void setDataSource(DataSource dataSource) {
-    this.dataSource = dataSource;
   }
 
   private Optional<User> createUser(ResultSet resultSet) throws SQLException {
