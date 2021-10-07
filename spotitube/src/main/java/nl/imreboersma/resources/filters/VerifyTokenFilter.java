@@ -35,7 +35,6 @@ public class VerifyTokenFilter implements ContainerRequestFilter {
   @Override
   public void filter(ContainerRequestContext containerRequestContext) {
     String token = containerRequestContext.getUriInfo().getQueryParameters().getFirst(KEY);
-
     if(token == null)
       throw new BadRequestException();
     Optional<User> optionalUser = userDAO.getUserFromToken(token);

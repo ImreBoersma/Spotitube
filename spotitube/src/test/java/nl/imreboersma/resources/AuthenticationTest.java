@@ -43,16 +43,9 @@ class AuthenticationTest {
   @Test
   void loginUnauthorized() {
     // Arrange
-    User user = new User();
-    user.setFirstName("John");
-    user.setLastName("Doe");
-    user.setToken("SecretToken");
+    when(userDAO.login("admin", "wrongpassword")).thenReturn(Optional.empty());
 
-    when(userDAO.login("admin", "admin")).thenReturn(Optional.of(user));
-
-    UserDTO userDTO = new UserDTO();
-    userDTO.user = "testUser";
-    userDTO.password = "password";
+    UserDTO userDTO = createUserDTO("admin", "wrongpassword");
 
     // Act
     Response response = authentication.login(userDTO);
@@ -64,15 +57,11 @@ class AuthenticationTest {
 
   @Test
   void loginOk() {
-    User user = new User();
-    user.setFirstName("John");
-    user.setLastName("Doe");
-    user.setToken("secretToken");
+    User user = createUser();
+
     when(userDAO.login("admin", "admin")).thenReturn(Optional.of(user));
 
-    UserDTO userDTO = new UserDTO();
-    userDTO.user = "admin";
-    userDTO.password = "admin";
+    UserDTO userDTO = createUserDTO("admin", "admin");
     Response response = authentication.login(userDTO);
 
     assertEquals(Response.Status.OK, response.getStatusInfo());
@@ -80,6 +69,20 @@ class AuthenticationTest {
     UserDTO responseDTO = (UserDTO) response.getEntity();
     assertEquals("John Doe", responseDTO.user);
     assertEquals("secretToken", responseDTO.token);
+  }
 
+  private User createUser() {
+    User user = new User();
+    user.setFirstName("John");
+    user.setLastName("Doe");
+    user.setToken("secretToken");
+    return user;
+  }
+
+  private UserDTO createUserDTO(String user, String password) {
+    UserDTO userDTO = new UserDTO();
+    userDTO.user = user;
+    userDTO.password = password;
+    return userDTO;
   }
 }

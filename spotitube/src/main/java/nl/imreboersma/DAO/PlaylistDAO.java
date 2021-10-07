@@ -2,8 +2,8 @@ package nl.imreboersma.DAO;
 
 import nl.imreboersma.domain.Playlist;
 import nl.imreboersma.domain.Track;
+import nl.imreboersma.utils.ConnectionHandler;
 
-import javax.sql.DataSource;
 import javax.ws.rs.InternalServerErrorException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -13,16 +13,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class PlaylistDAO implements iPlaylistDAO {
-  private DataSource dataSource;
-
-  @Override
-  public void setDataSource(DataSource dataSource) {
-    this.dataSource = dataSource;
-  }
-
   @Override
   public ArrayList<Playlist> getAllPlaylistsCheckOwner(int userId) {
-    try(Connection connection = dataSource.getConnection()) {
+    try(Connection connection = ConnectionHandler.createConnection()) {
       PreparedStatement statement = connection.prepareStatement("SELECT IIF(playlist.owner_user_id = ?, 1, 0) as owner, * FROM [playlist] LEFT JOIN playlist_tracks pt on playlist.id = pt.playlist_id LEFT JOIN track t on pt.track_id = t.id");
       statement.setInt(1, userId);
       ResultSet resultSet = statement.executeQuery();
@@ -51,9 +44,8 @@ public class PlaylistDAO implements iPlaylistDAO {
         playlist.addTrack(track);
       }
       return new ArrayList<>(playlistHashMap.values());
-    } catch(SQLException throwable) {
-      throwable.printStackTrace();
-      throw new InternalServerErrorException();
+    } catch(SQLException e) {
+      throw new InternalServerErrorException(e);
     }
   }
 
@@ -76,47 +68,44 @@ public class PlaylistDAO implements iPlaylistDAO {
 
   @Override
   public void deletePlaylist(int playlistId) {
-    try(Connection connection = dataSource.getConnection()) {
+    try(Connection connection = ConnectionHandler.createConnection()) {
       PreparedStatement statement = connection.prepareStatement("DELETE FROM [playlist] WHERE [playlist].id = ?");
       statement.setInt(1, playlistId);
       statement.executeQuery();
-    } catch(SQLException throwable) {
-      throwable.printStackTrace();
-      throw new InternalServerErrorException();
+    } catch(SQLException e) {
+      throw new InternalServerErrorException(e);
     }
   }
 
   @Override
   public void addPlaylist(int userId, String name) {
-    try(Connection connection = dataSource.getConnection()) {
+    try(Connection connection = ConnectionHandler.createConnection()) {
       String sql = "INSERT INTO [playlist] (owner_user_id, name) VALUES(?, ?)";
       PreparedStatement statement = connection.prepareStatement(sql);
       statement.setInt(1, userId);
       statement.setString(2, name);
       statement.execute();
-    } catch(SQLException throwable) {
-      throwable.printStackTrace();
-      throw new InternalServerErrorException();
+    } catch(SQLException e) {
+      throw new InternalServerErrorException(e);
     }
   }
 
   @Override
   public void editPlaylist(int playlistId, String name) {
-    try(Connection connection = dataSource.getConnection()) {
+    try(Connection connection = ConnectionHandler.createConnection()) {
       String sql = "UPDATE [playlist] SET name = ? WHERE id = ?";
       PreparedStatement statement = connection.prepareStatement(sql);
       statement.setString(1, name);
       statement.setInt(2, playlistId);
       statement.execute();
-    } catch(SQLException throwable) {
-      throwable.printStackTrace();
-      throw new InternalServerErrorException();
+    } catch(SQLException e) {
+      throw new InternalServerErrorException(e);
     }
   }
 
   @Override
   public ArrayList<Track> getAllTracks(int playlistId) {
-    try(Connection connection = dataSource.getConnection()) {
+    try(Connection connection = ConnectionHandler.createConnection()) {
       PreparedStatement statement = connection.prepareStatement("SELECT [track].*, [playlist_tracks].offline_available FROM [playlist_tracks] LEFT JOIN [track] ON [playlist_tracks].track_id = [track].id WHERE [playlist_tracks].playlist_id = ?");
       statement.setInt(1, playlistId);
       ResultSet resultSet = statement.executeQuery();
@@ -126,23 +115,21 @@ public class PlaylistDAO implements iPlaylistDAO {
         tracks.add(createTrack(resultSet));
       }
       return tracks;
-    } catch(SQLException throwable) {
-      throwable.printStackTrace();
-      throw new InternalServerErrorException();
+    } catch(SQLException e) {
+      throw new InternalServerErrorException(e);
     }
   }
 
   @Override
   public boolean exists(int playlistId) {
-    try(Connection connection = dataSource.getConnection()) {
+    try(Connection connection = ConnectionHandler.createConnection()) {
       String sql = "SELECT 1 FROM [playlist] WHERE id = ?";
       PreparedStatement statement = connection.prepareStatement(sql);
       statement.setInt(1, playlistId);
       statement.execute();
       return statement.getResultSet().next();
-    } catch(SQLException throwable) {
-      throwable.printStackTrace();
-      throw new InternalServerErrorException();
+    } catch(SQLException e) {
+      throw new InternalServerErrorException(e);
     }
   }
 }

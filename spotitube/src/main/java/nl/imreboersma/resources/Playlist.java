@@ -16,13 +16,15 @@ import java.util.ArrayList;
 
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
-@Path("/playlist")
+@Path("/playlists")
 @VerifyToken
 public class Playlist {
   private iPlaylistDAO playlistDAO;
+  @Context
+  VerifyTokenFilter verifyTokenFilter;
 
   @GET
-  public Response all(@Context VerifyTokenFilter verifyTokenFilter) {
+  public Response all() {
     User user = verifyTokenFilter.getUser();
     ArrayList<nl.imreboersma.domain.Playlist> playlists = playlistDAO.getAllPlaylistsCheckOwner(user.getId());
     return Response.ok().build();

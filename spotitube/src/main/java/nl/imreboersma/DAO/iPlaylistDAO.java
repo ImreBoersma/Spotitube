@@ -5,7 +5,7 @@ import nl.imreboersma.domain.Track;
 
 import java.util.ArrayList;
 
-public interface iPlaylistDAO extends iDAO {
+public interface iPlaylistDAO {
   ArrayList<Playlist> getAllPlaylistsCheckOwner(int userId);
 
   void deletePlaylist(int playlistId);

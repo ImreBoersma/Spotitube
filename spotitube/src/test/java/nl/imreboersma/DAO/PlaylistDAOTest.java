@@ -3,9 +3,9 @@ package nl.imreboersma.DAO;
 import org.junit.jupiter.api.Test;
 
 //TODO: Ask Rody about the consistency of data being tested.
-class PlaylistDAOTest extends AbstractDAOTest<PlaylistDAO> {
+class PlaylistDAOTest {
   PlaylistDAOTest() {
-    dao = new PlaylistDAO();
+    PlaylistDAO dao = new PlaylistDAO();
   }
 
   @Test
