@@ -3,13 +3,27 @@ package nl.imreboersma.domain;
 import java.util.ArrayList;
 
 public class Playlist {
+  private ArrayList<Track> tracks = new ArrayList<>();
+
+  public Playlist(int id, String name, boolean owner) {
+    this.id = id;
+    this.name = name;
+    this.owner = owner;
+  }
+
   private int id;
   private String name;
   private boolean owner;
-  private ArrayList<Track> tracks;
+
+  public Playlist() {
+  }
 
   public int getId() {
     return id;
+  }
+
+  public int getLength() {
+    return tracks.stream().mapToInt(Track::getDuration).sum();
   }
 
   public void setId(int id) {

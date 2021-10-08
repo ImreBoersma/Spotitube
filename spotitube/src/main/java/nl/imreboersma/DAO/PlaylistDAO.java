@@ -2,8 +2,10 @@ package nl.imreboersma.DAO;
 
 import nl.imreboersma.domain.Playlist;
 import nl.imreboersma.domain.Track;
-import nl.imreboersma.utils.ConnectionHandler;
 
+import javax.annotation.Resource;
+import javax.enterprise.inject.Default;
+import javax.sql.DataSource;
 import javax.ws.rs.InternalServerErrorException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -12,12 +14,15 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+@Default
 public class PlaylistDAO implements iPlaylistDAO {
+  @Resource(name = "jdbc/Spotitube")
+  DataSource dataSource;
+
   @Override
   public ArrayList<Playlist> getAllPlaylistsCheckOwner(int userId) {
-    try(Connection connection = ConnectionHandler.createConnection()) {
-      PreparedStatement statement = connection.prepareStatement("SELECT IIF(playlist.owner_user_id = ?, 1, 0) as owner, * FROM [playlist] LEFT JOIN playlist_tracks pt on playlist.id = pt.playlist_id LEFT JOIN track t on pt.track_id = t.id");
-      statement.setInt(1, userId);
+    try(Connection connection = dataSource.getConnection()) {
+      PreparedStatement statement = connection.prepareStatement("SELECT IIF(playlist.owner_user_id = '" + userId + "', 1, 0) as owner, * FROM [playlist] LEFT JOIN playlist_tracks pt on playlist.id = pt.playlist_id LEFT JOIN track t on pt.track_id = t.id");
       ResultSet resultSet = statement.executeQuery();
 
       HashMap<Integer, Playlist> playlistHashMap = new HashMap<>();
@@ -68,7 +73,7 @@ public class PlaylistDAO implements iPlaylistDAO {
 
   @Override
   public void deletePlaylist(int playlistId) {
-    try(Connection connection = ConnectionHandler.createConnection()) {
+    try(Connection connection = dataSource.getConnection()) {
       PreparedStatement statement = connection.prepareStatement("DELETE FROM [playlist] WHERE [playlist].id = ?");
       statement.setInt(1, playlistId);
       statement.executeQuery();
@@ -79,7 +84,7 @@ public class PlaylistDAO implements iPlaylistDAO {
 
   @Override
   public void addPlaylist(int userId, String name) {
-    try(Connection connection = ConnectionHandler.createConnection()) {
+    try(Connection connection = dataSource.getConnection()) {
       String sql = "INSERT INTO [playlist] (owner_user_id, name) VALUES(?, ?)";
       PreparedStatement statement = connection.prepareStatement(sql);
       statement.setInt(1, userId);
@@ -92,7 +97,7 @@ public class PlaylistDAO implements iPlaylistDAO {
 
   @Override
   public void editPlaylist(int playlistId, String name) {
-    try(Connection connection = ConnectionHandler.createConnection()) {
+    try(Connection connection = dataSource.getConnection()) {
       String sql = "UPDATE [playlist] SET name = ? WHERE id = ?";
       PreparedStatement statement = connection.prepareStatement(sql);
       statement.setString(1, name);
@@ -105,7 +110,7 @@ public class PlaylistDAO implements iPlaylistDAO {
 
   @Override
   public ArrayList<Track> getAllTracks(int playlistId) {
-    try(Connection connection = ConnectionHandler.createConnection()) {
+    try(Connection connection = dataSource.getConnection()) {
       PreparedStatement statement = connection.prepareStatement("SELECT [track].*, [playlist_tracks].offline_available FROM [playlist_tracks] LEFT JOIN [track] ON [playlist_tracks].track_id = [track].id WHERE [playlist_tracks].playlist_id = ?");
       statement.setInt(1, playlistId);
       ResultSet resultSet = statement.executeQuery();
@@ -122,7 +127,7 @@ public class PlaylistDAO implements iPlaylistDAO {
 
   @Override
   public boolean exists(int playlistId) {
-    try(Connection connection = ConnectionHandler.createConnection()) {
+    try(Connection connection = dataSource.getConnection()) {
       String sql = "SELECT 1 FROM [playlist] WHERE id = ?";
       PreparedStatement statement = connection.prepareStatement(sql);
       statement.setInt(1, playlistId);

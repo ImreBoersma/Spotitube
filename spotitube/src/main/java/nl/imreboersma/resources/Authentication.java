@@ -32,7 +32,7 @@ public class Authentication {
 
     User user = optionalUser.get();
     UserDTO response = new UserDTO();
-    response.user = user.getFullName();
+    response.user = user.getName();
     response.token = user.getToken();
 
     return Response.ok().entity(response).build();

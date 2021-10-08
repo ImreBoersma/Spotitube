@@ -4,6 +4,7 @@ import nl.imreboersma.DAO.iPlaylistDAO;
 import nl.imreboersma.DAO.iTrackDAO;
 import nl.imreboersma.DTO.TrackDTO;
 import nl.imreboersma.DTO.playlists.TracksDTO;
+import nl.imreboersma.domain.Track;
 import nl.imreboersma.resources.filters.VerifyToken;
 
 import javax.inject.Inject;
@@ -19,7 +20,7 @@ import java.util.stream.Collectors;
 @Produces(MediaType.APPLICATION_JSON)
 @Path("/track")
 @VerifyToken
-public class Track {
+public class Tracks {
   private iPlaylistDAO playlistDAO;
   private iTrackDAO trackDAO;
 
@@ -27,12 +28,10 @@ public class Track {
   public Response all(@QueryParam("forPlaylist") int playlistId) {
     if(!playlistDAO.exists(playlistId))
       return Response.status(Response.Status.NOT_FOUND).build();
-
-    ArrayList<nl.imreboersma.domain.Track> tracks = trackDAO.getTracksNotInPlaylist(playlistId);
-
+    final ArrayList<Track> tracks = trackDAO.getTracksNotInPlaylist(playlistId);
     TracksDTO response = new TracksDTO();
     response.tracks = tracks.stream().map(track -> {
-      TrackDTO trackDTO = new TrackDTO();
+      final TrackDTO trackDTO = new TrackDTO();
       trackDTO.id = track.getId();
       trackDTO.title = track.getTitle();
       trackDTO.performer = track.getPerformer();
@@ -44,7 +43,6 @@ public class Track {
       trackDTO.offlineAvailable = track.isOfflineAvailable();
       return trackDTO;
     }).collect(Collectors.toCollection(ArrayList::new));
-
     return Response.ok().entity(response).build();
   }
 

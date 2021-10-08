@@ -55,9 +55,8 @@ public class TrackDAO implements iTrackDAO {
       statement.setInt(2, trackId);
       ResultSet resultSet = statement.executeQuery();
       return resultSet.next();
-    } catch(SQLException throwable) {
-      throwable.printStackTrace();
-      throw new InternalServerErrorException();
+    } catch(SQLException e) {
+      throw new InternalServerErrorException(e);
     }
   }
 
@@ -68,9 +67,8 @@ public class TrackDAO implements iTrackDAO {
       statement.setInt(1, playlistId);
       statement.setInt(2, trackId);
       statement.executeQuery();
-    } catch(SQLException throwable) {
-      throwable.printStackTrace();
-      throw new InternalServerErrorException();
+    } catch(SQLException e) {
+      throw new InternalServerErrorException(e);
     }
   }
 
@@ -82,9 +80,8 @@ public class TrackDAO implements iTrackDAO {
       statement.setInt(2, trackId);
       statement.setBoolean(3, offlineAvailable);
       statement.executeQuery();
-    } catch(SQLException throwable) {
-      throwable.printStackTrace();
-      throw new InternalServerErrorException();
+    } catch(SQLException e) {
+      throw new InternalServerErrorException(e);
     }
   }
 }

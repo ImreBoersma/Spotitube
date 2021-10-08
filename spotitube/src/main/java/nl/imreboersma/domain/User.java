@@ -1,6 +1,8 @@
 package nl.imreboersma.domain;
 
-public class User {
+import java.security.Principal;
+
+public class User implements Principal {
   private int id;
   private String username;
   private String password;
@@ -51,7 +53,8 @@ public class User {
     this.token = token;
   }
 
-  public String getFullName() {
+  @Override
+  public String getName() {
     return getFirstName() + " " + getLastName();
   }
 }

@@ -10,18 +10,19 @@ import javax.ws.rs.BadRequestException;
 import javax.ws.rs.NotAuthorizedException;
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.core.MultivaluedMap;
+import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
-//TODO: filterInvalidToken only succeeds if singly executed
 class VerifyTokenFilterTest {
   private static final String TOKEN = "SecretToken";
   private ContainerRequestContext containerRequestContext;
   private UriInfo uriInfo;
   private MultivaluedMap<String, String> multivaluedMap;
+  private SecurityContext securityContext;
 
   @BeforeEach
   @SuppressWarnings("unchecked")
@@ -29,6 +30,8 @@ class VerifyTokenFilterTest {
     containerRequestContext = mock(ContainerRequestContext.class);
     uriInfo = mock(UriInfo.class);
     multivaluedMap = (MultivaluedMap<String, String>) mock(MultivaluedMap.class);
+    securityContext = mock(SecurityContext.class);
+
   }
 
   @AfterEach
@@ -83,6 +86,6 @@ class VerifyTokenFilterTest {
     verifyTokenFilter.filter(containerRequestContext);
 
     // Assert
-    verify(containerRequestContext, times(1));
+    verify(containerRequestContext, times(1)).setSecurityContext(any());
   }
 }
