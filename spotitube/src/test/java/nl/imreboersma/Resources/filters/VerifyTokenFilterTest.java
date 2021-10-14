@@ -1,7 +1,7 @@
-package nl.imreboersma.resources.filters;
+package nl.imreboersma.Resources.filters;
 
 import nl.imreboersma.DAO.iUserDAO;
-import nl.imreboersma.domain.User;
+import nl.imreboersma.Domain.User;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

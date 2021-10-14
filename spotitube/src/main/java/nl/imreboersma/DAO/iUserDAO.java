@@ -1,6 +1,6 @@
 package nl.imreboersma.DAO;
 
-import nl.imreboersma.domain.User;
+import nl.imreboersma.Domain.User;
 
 import java.util.Optional;
 

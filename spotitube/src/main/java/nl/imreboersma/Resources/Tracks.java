@@ -1,11 +1,11 @@
-package nl.imreboersma.resources;
+package nl.imreboersma.Resources;
 
 import nl.imreboersma.DAO.iPlaylistDAO;
 import nl.imreboersma.DAO.iTrackDAO;
 import nl.imreboersma.DTO.TrackDTO;
 import nl.imreboersma.DTO.playlists.TracksDTO;
-import nl.imreboersma.domain.Track;
-import nl.imreboersma.resources.filters.VerifyToken;
+import nl.imreboersma.Domain.Track;
+import nl.imreboersma.Resources.filters.VerifyToken;
 
 import javax.inject.Inject;
 import javax.ws.rs.GET;
@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import java.util.stream.Collectors;
 
 @Produces(MediaType.APPLICATION_JSON)
-@Path("/track")
+@Path("/tracks")
 @VerifyToken
 public class Tracks {
   private iPlaylistDAO playlistDAO;

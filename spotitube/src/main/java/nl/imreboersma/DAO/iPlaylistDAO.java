@@ -1,11 +1,11 @@
 package nl.imreboersma.DAO;
 
-import nl.imreboersma.domain.Playlist;
-import nl.imreboersma.domain.Track;
+import nl.imreboersma.Domain.Playlist;
+import nl.imreboersma.Domain.Track;
 
 import java.util.ArrayList;
 
-public interface iPlaylistDAO {
+public interface iPlaylistDAO extends iDAO {
   ArrayList<Playlist> getAllPlaylistsCheckOwner(int userId);
 
   void deletePlaylist(int playlistId);

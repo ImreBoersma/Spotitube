@@ -1,6 +1,6 @@
 package nl.imreboersma.DAO;
 
-import nl.imreboersma.domain.User;
+import nl.imreboersma.Domain.User;
 
 import javax.annotation.Resource;
 import javax.sql.DataSource;
@@ -11,10 +11,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Optional;
 
-
 public class UserDAO implements iUserDAO {
-  @Resource(name = "jdbc/Spotitube")
-  DataSource dataSource;
+  @Resource(name = "jdbc/spotitube")
+  private DataSource dataSource;
 
   @Override
   public Optional<User> login(String username, String password) {
@@ -32,7 +31,7 @@ public class UserDAO implements iUserDAO {
   @Override
   public Optional<User> getUserFromToken(String token) {
     try(Connection connection = dataSource.getConnection()) {
-      PreparedStatement statement = connection.prepareStatement("SELECT * FROM [user] WHERE [user].[token] = '53F8B70B-F0C2-4092-829A-65516AF24CCA'");
+      PreparedStatement statement = connection.prepareStatement("SELECT * FROM [user] WHERE [user].[token] = '" + token + "'");
       ResultSet resultSet = statement.executeQuery();
 
       return createUser(resultSet);

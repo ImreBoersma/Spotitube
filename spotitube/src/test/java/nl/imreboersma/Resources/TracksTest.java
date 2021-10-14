@@ -1,10 +1,10 @@
-package nl.imreboersma.resources;
+package nl.imreboersma.Resources;
 
 import nl.imreboersma.DAO.iPlaylistDAO;
 import nl.imreboersma.DAO.iTrackDAO;
 import nl.imreboersma.DTO.TrackDTO;
 import nl.imreboersma.DTO.playlists.TracksDTO;
-import nl.imreboersma.domain.Track;
+import nl.imreboersma.Domain.Track;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

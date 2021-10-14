@@ -1,10 +1,9 @@
 package nl.imreboersma.DAO;
 
-import nl.imreboersma.domain.Playlist;
-import nl.imreboersma.domain.Track;
+import nl.imreboersma.Domain.Playlist;
+import nl.imreboersma.Domain.Track;
 
 import javax.annotation.Resource;
-import javax.enterprise.inject.Default;
 import javax.sql.DataSource;
 import javax.ws.rs.InternalServerErrorException;
 import java.sql.Connection;
@@ -13,16 +12,18 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Optional;
+import java.util.function.Predicate;
 
-@Default
 public class PlaylistDAO implements iPlaylistDAO {
-  @Resource(name = "jdbc/Spotitube")
-  DataSource dataSource;
+  @Resource(name = "jdbc/spotitube")
+  private DataSource dataSource;
 
   @Override
   public ArrayList<Playlist> getAllPlaylistsCheckOwner(int userId) {
     try(Connection connection = dataSource.getConnection()) {
-      PreparedStatement statement = connection.prepareStatement("SELECT IIF(playlist.owner_user_id = '" + userId + "', 1, 0) as owner, * FROM [playlist] LEFT JOIN playlist_tracks pt on playlist.id = pt.playlist_id LEFT JOIN track t on pt.track_id = t.id");
+      PreparedStatement statement = connection.prepareStatement("SELECT IIF(playlist.owner_user_id = ?, 1, 0) as owner, * FROM [playlist] LEFT JOIN playlist_tracks pt on playlist.id = pt.playlist_id LEFT JOIN track t on pt.track_id = t.id");
+      statement.setInt(1, userId);
       ResultSet resultSet = statement.executeQuery();
 
       HashMap<Integer, Playlist> playlistHashMap = new HashMap<>();
@@ -76,7 +77,7 @@ public class PlaylistDAO implements iPlaylistDAO {
     try(Connection connection = dataSource.getConnection()) {
       PreparedStatement statement = connection.prepareStatement("DELETE FROM [playlist] WHERE [playlist].id = ?");
       statement.setInt(1, playlistId);
-      statement.executeQuery();
+      statement.execute();
     } catch(SQLException e) {
       throw new InternalServerErrorException(e);
     }
@@ -85,8 +86,7 @@ public class PlaylistDAO implements iPlaylistDAO {
   @Override
   public void addPlaylist(int userId, String name) {
     try(Connection connection = dataSource.getConnection()) {
-      String sql = "INSERT INTO [playlist] (owner_user_id, name) VALUES(?, ?)";
-      PreparedStatement statement = connection.prepareStatement(sql);
+      PreparedStatement statement = connection.prepareStatement("INSERT INTO [playlist] (owner_user_id, name) VALUES(?, ?)");
       statement.setInt(1, userId);
       statement.setString(2, name);
       statement.execute();
@@ -98,8 +98,7 @@ public class PlaylistDAO implements iPlaylistDAO {
   @Override
   public void editPlaylist(int playlistId, String name) {
     try(Connection connection = dataSource.getConnection()) {
-      String sql = "UPDATE [playlist] SET name = ? WHERE id = ?";
-      PreparedStatement statement = connection.prepareStatement(sql);
+      PreparedStatement statement = connection.prepareStatement("UPDATE [playlist] SET name = ? WHERE id = ?");
       statement.setString(1, name);
       statement.setInt(2, playlistId);
       statement.execute();
@@ -111,7 +110,7 @@ public class PlaylistDAO implements iPlaylistDAO {
   @Override
   public ArrayList<Track> getAllTracks(int playlistId) {
     try(Connection connection = dataSource.getConnection()) {
-      PreparedStatement statement = connection.prepareStatement("SELECT [track].*, [playlist_tracks].offline_available FROM [playlist_tracks] LEFT JOIN [track] ON [playlist_tracks].track_id = [track].id WHERE [playlist_tracks].playlist_id = ?");
+      PreparedStatement statement = connection.prepareStatement("SELECT [track].*, [playlist_tracks].* FROM [playlist_tracks] LEFT JOIN [track] ON [playlist_tracks].track_id = [track].id WHERE [playlist_tracks].playlist_id = ?");
       statement.setInt(1, playlistId);
       ResultSet resultSet = statement.executeQuery();
 
@@ -128,13 +127,21 @@ public class PlaylistDAO implements iPlaylistDAO {
   @Override
   public boolean exists(int playlistId) {
     try(Connection connection = dataSource.getConnection()) {
-      String sql = "SELECT 1 FROM [playlist] WHERE id = ?";
-      PreparedStatement statement = connection.prepareStatement(sql);
+      PreparedStatement statement = connection.prepareStatement("SELECT 1 FROM [playlist] WHERE id = ?");
       statement.setInt(1, playlistId);
       statement.execute();
       return statement.getResultSet().next();
     } catch(SQLException e) {
       throw new InternalServerErrorException(e);
     }
+  }
+
+  Optional<Playlist> find(Predicate<Playlist> playlistPredicate) {
+    return getAllPlaylistsCheckOwner(0).stream().filter(playlistPredicate).findFirst();
+  }
+
+  @Override
+  public void setDataSource(DataSource dataSource) {
+    this.dataSource = dataSource;
   }
 }

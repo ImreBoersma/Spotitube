@@ -1,19 +1,18 @@
-package nl.imreboersma.domain;
+package nl.imreboersma.Domain;
 
 import java.util.ArrayList;
 
 public class Playlist {
   private ArrayList<Track> tracks = new ArrayList<>();
+  private int id;
+  private String name;
+  private boolean owner;
 
   public Playlist(int id, String name, boolean owner) {
     this.id = id;
     this.name = name;
     this.owner = owner;
   }
-
-  private int id;
-  private String name;
-  private boolean owner;
 
   public Playlist() {
   }
@@ -22,12 +21,12 @@ public class Playlist {
     return id;
   }
 
-  public int getLength() {
-    return tracks.stream().mapToInt(Track::getDuration).sum();
-  }
-
   public void setId(int id) {
     this.id = id;
+  }
+
+  public int getLength() {
+    return tracks.stream().mapToInt(Track::getDuration).sum();
   }
 
   public String getName() {

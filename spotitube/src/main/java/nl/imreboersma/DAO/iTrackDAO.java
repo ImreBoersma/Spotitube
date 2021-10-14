@@ -1,6 +1,6 @@
 package nl.imreboersma.DAO;
 
-import nl.imreboersma.domain.Track;
+import nl.imreboersma.Domain.Track;
 
 import java.util.ArrayList;
 

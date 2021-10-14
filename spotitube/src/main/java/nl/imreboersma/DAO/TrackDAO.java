@@ -1,8 +1,8 @@
 package nl.imreboersma.DAO;
 
-import nl.imreboersma.domain.Track;
+import nl.imreboersma.Domain.Track;
 
-import javax.enterprise.inject.Default;
+import javax.annotation.Resource;
 import javax.sql.DataSource;
 import javax.ws.rs.InternalServerErrorException;
 import java.sql.Connection;
@@ -11,8 +11,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-@Default
 public class TrackDAO implements iTrackDAO {
+  @Resource(name = "jdbc/spotitube")
   private DataSource dataSource;
 
   @Override
@@ -23,8 +23,7 @@ public class TrackDAO implements iTrackDAO {
   @Override
   public ArrayList<Track> getTracksNotInPlaylist(int playlistId) {
     try(Connection connection = dataSource.getConnection()) {
-      PreparedStatement statement = connection.prepareStatement("SELECT [track].* FROM [track] LEFT JOIN playlist_tracks pt on track.id = pt.track_id WHERE pt.playlist_id != ? OR pt.playlist_id IS NULL");
-      statement.setInt(1, playlistId);
+      PreparedStatement statement = connection.prepareStatement("SELECT [track].* FROM [track] LEFT JOIN playlist_tracks pt on track.id = pt.track_id WHERE pt.playlist_id != '" + playlistId + "' OR pt.playlist_id IS NULL");
       ResultSet resultSet = statement.executeQuery();
 
       ArrayList<Track> tracks = new ArrayList<>();
@@ -41,18 +40,15 @@ public class TrackDAO implements iTrackDAO {
         tracks.add(track);
       }
       return tracks;
-    } catch(SQLException throwable) {
-      throwable.printStackTrace();
-      throw new InternalServerErrorException();
+    } catch(SQLException e) {
+      throw new InternalServerErrorException(e);
     }
   }
 
   @Override
   public boolean trackExistsInPlaylist(int playlistId, int trackId) {
     try(Connection connection = dataSource.getConnection()) {
-      PreparedStatement statement = connection.prepareStatement("SELECT 1 FROM [playlist_tracks] pt WHERE pt.playlist_id = ? AND pt.track_id = ?");
-      statement.setInt(1, playlistId);
-      statement.setInt(2, trackId);
+      PreparedStatement statement = connection.prepareStatement("SELECT 1 FROM playlist_tracks WHERE playlist_id = '" + playlistId + "' AND [track_id] = '" + trackId + "'");
       ResultSet resultSet = statement.executeQuery();
       return resultSet.next();
     } catch(SQLException e) {
@@ -66,7 +62,7 @@ public class TrackDAO implements iTrackDAO {
       PreparedStatement statement = connection.prepareStatement("DELETE FROM [playlist_tracks] WHERE playlist_id = ? AND track_id = ?");
       statement.setInt(1, playlistId);
       statement.setInt(2, trackId);
-      statement.executeQuery();
+      statement.execute();
     } catch(SQLException e) {
       throw new InternalServerErrorException(e);
     }
@@ -79,7 +75,7 @@ public class TrackDAO implements iTrackDAO {
       statement.setInt(1, playlistId);
       statement.setInt(2, trackId);
       statement.setBoolean(3, offlineAvailable);
-      statement.executeQuery();
+      statement.execute();
     } catch(SQLException e) {
       throw new InternalServerErrorException(e);
     }

@@ -1,8 +1,8 @@
-package nl.imreboersma.resources;
+package nl.imreboersma.Resources;
 
 import nl.imreboersma.DAO.iUserDAO;
 import nl.imreboersma.DTO.UserDTO;
-import nl.imreboersma.domain.User;
+import nl.imreboersma.Domain.User;
 
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;

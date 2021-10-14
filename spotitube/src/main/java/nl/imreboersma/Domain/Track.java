@@ -1,4 +1,4 @@
-package nl.imreboersma.domain;
+package nl.imreboersma.Domain;
 
 import java.util.Date;
 

@@ -1,4 +1,4 @@
-package nl.imreboersma.resources.filters;
+package nl.imreboersma.Resources.filters;
 
 import javax.ws.rs.NameBinding;
 import java.lang.annotation.ElementType;

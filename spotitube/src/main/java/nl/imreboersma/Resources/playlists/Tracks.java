@@ -1,11 +1,11 @@
-package nl.imreboersma.resources.playlists;
+package nl.imreboersma.Resources.playlists;
 
 import nl.imreboersma.DAO.iPlaylistDAO;
 import nl.imreboersma.DAO.iTrackDAO;
 import nl.imreboersma.DTO.TrackDTO;
 import nl.imreboersma.DTO.playlists.TracksDTO;
-import nl.imreboersma.domain.Track;
-import nl.imreboersma.resources.filters.VerifyToken;
+import nl.imreboersma.Domain.Track;
+import nl.imreboersma.Resources.filters.VerifyToken;
 
 import javax.inject.Inject;
 import javax.ws.rs.*;
