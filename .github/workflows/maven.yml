@@ -27,6 +27,8 @@ jobs:
         java-version: '20'
         distribution: 'temurin'
         cache: maven
+    - name: ls
+      run: ls -a
     - name: Build with Maven
       run: mvn -B package
 
