@@ -1,13 +1,13 @@
 # Spotitube
-Spotify en Youtube hebben de handen ineengeslagen en werken gezamenlijk aan een app (Spotitube) waarmee een klant een overzicht kan krijgen van afspeellijsten met daarin audio- en videostreams.
+Spotify and Youtube have joined forces and are working together on an app (Spotitube) that gives a customer an overview of playlists containing audio and video streams.
 
-Opdracht is [hier](https://github.com/ImreBoersma/spotitube/blob/main/opdracht.md) te vinden.
+Assignment can be found [here](https://github.com/ImreBoersma/spotitube/blob/main/assignment.md).
 
-API-Spec is [hier](https://github.com/HANICA-DEA/spotitube/blob/master/README.md) te vinden.
+API Spec can be found [here](https://github.com/HANICA-DEA/spotitube/blob/master/README.md).
 
-Om dit project te testen is het op het moment nog nodig om het bestand `/src/test/java/nl/imreboersma/utils/script.sql` uit te voeren. En na de test de database te verwijderen.
-Er wordt aan gewerkt om dit automatisch te laten gebeuren.
+To test this project it is currently still necessary to execute the file `/src/test/java/nl/imreboersma/utils/script.sql`. And after the test delete the database.
+We are working on making this happen automatically.
 
-Het opleverdocument is te vinden in `/docs/`
+The delivery document can be found in `/docs/`
 
-Ook is er een SQL Server driver nodig in de `/lib/` folder in de tomEE bestanden. Deze is [hier]([https://download.microsoft.com/download/b/c/5/bc5e407f-97ff-42ea-959d-12f2391063d7/sqljdbc_9.4.0.0_enu.zip](https://download.microsoft.com/download/b/c/5/bc5e407f-97ff-42ea-959d-12f2391063d7/sqljdbc_9.4.0.0_enu.zip)) te downloaden.
+Also, a SQL Server driver is needed in the `/lib/` folder in the tomEE files. This one is [here]([https://download.microsoft.com/download/b/c/5/bc5e407f-97ff-42ea-959d-12f2391063d7/sqljdbc_9.4.0.0_enu.zip](https://download. microsoft.com/download/b/c/5/bc5e407f-97ff-42ea-959d-12f2391063d7/sqljdbc_9.4.0.0_enu.zip)).
