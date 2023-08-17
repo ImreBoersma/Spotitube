@@ -10,4 +10,4 @@ We are working on making this happen automatically.
 
 The delivery document can be found in `/docs/`
 
-Also, a SQL Server driver is needed in the `/lib/` folder in the tomEE files. This one is [here]([https://download.microsoft.com/download/b/c/5/bc5e407f-97ff-42ea-959d-12f2391063d7/sqljdbc_9.4.0.0_enu.zip](https://download. microsoft.com/download/b/c/5/bc5e407f-97ff-42ea-959d-12f2391063d7/sqljdbc_9.4.0.0_enu.zip)).
+Also, a SQL Server driver is needed in the `/lib/` folder in the tomEE files. This one is [here](https://download.microsoft.com/download/b/c/5/bc5e407f-97ff-42ea-959d-12f2391063d7/sqljdbc_9.4.0.0_enu.zip).
