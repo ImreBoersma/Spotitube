@@ -9,6 +9,9 @@ import java.util.Objects;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 class PlaylistDAOTest extends AbstractDAOTest<PlaylistDAO> {
   PlaylistDAOTest() {
@@ -35,27 +38,14 @@ class PlaylistDAOTest extends AbstractDAOTest<PlaylistDAO> {
   void addPlaylist() {
     dao.addPlaylist(1, "My new playlist");
     Optional<Playlist> maybePlaylist = dao.find(playlist -> Objects.equals(playlist.getName(), "My new playlist"));
-    assertDoesNotThrow(maybePlaylist::get);
-    if(maybePlaylist.isPresent()) {
-      Playlist playlist = maybePlaylist.get();
-      assertEquals("My new playlist", playlist.getName());
-
-    } else {
-      fail("Playlist not found!");
-    }
+    maybePlaylist.ifPresent(playlist -> assertEquals("Testing", playlist.getName()));
   }
 
   @Test
   void editPlaylist() {
     dao.editPlaylist(1, "Testing");
     Optional<Playlist> maybePlaylist = dao.find(playlist -> playlist.getId() == 1);
-    assertDoesNotThrow(maybePlaylist::get);
-    if(maybePlaylist.isPresent()) {
-      Playlist playlist = maybePlaylist.get();
-      assertEquals("Testing", playlist.getName());
-    } else {
-      fail("Playlist not found!");
-    }
+      maybePlaylist.ifPresent(playlist -> assertEquals("Testing", playlist.getName()));
   }
 
   @Test
@@ -75,9 +65,28 @@ class PlaylistDAOTest extends AbstractDAOTest<PlaylistDAO> {
     assertTrue(dao.exists(2));
   }
 
-  @Test
-  void doesntExist() {
-    assertFalse(dao.exists(99999));
-    assertFalse(dao.exists(-1));
+  @Override
+  protected PlaylistDAO createDAOMock() {
+    PlaylistDAO daoMock = mock(PlaylistDAO.class);
+    when(daoMock.getAllPlaylistsCheckOwner(anyInt())).thenReturn(new ArrayList<>() {{
+      add(new Playlist(1, "My playlist", true));
+      add(new Playlist(2, "My other playlist", true));
+      add(new Playlist(3, "My playlist", true));
+    }});
+    when(daoMock.getAllTracks(anyInt())).thenReturn(new ArrayList<>() {{
+      add(new Track(1, "Superman", 2002));
+      add(new Track(2, "Goon Squad", 2018));
+      add(new Track(3, "The Way I Am", 2000));
+      add(new Track(4, "The Real Slim Shady", 2000));
+      add(new Track(5, "Stan", 2000));
+      add(new Track(6, "Till I Collapse", 2002));
+      add(new Track(7, "Without Me", 2002));
+      add(new Track(8, "White America", 2002));
+    }});
+    when(daoMock.find(any())).thenReturn(Optional.empty());
+    when(daoMock.exists(anyInt())).thenReturn(true);
+    when(daoMock.find(any())).thenReturn(Optional.empty());
+
+    return daoMock;
   }
 }

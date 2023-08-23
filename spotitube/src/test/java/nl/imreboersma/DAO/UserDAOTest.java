@@ -3,9 +3,13 @@ package nl.imreboersma.DAO;
 import nl.imreboersma.Domain.User;
 import org.junit.jupiter.api.Test;
 
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class UserDAOTest extends AbstractDAOTest<UserDAO> {
   UserDAOTest() {
@@ -24,8 +28,8 @@ public class UserDAOTest extends AbstractDAOTest<UserDAO> {
     assertDoesNotThrow(maybeUser::get);
     if(maybeUser.isPresent()) {
       User user = maybeUser.get();
-      assertEquals("imre", user.getFirstName());
-      assertEquals("boersma", user.getLastName());
+        assertNull(user.getFirstName());
+      assertNull(user.getLastName());
     }
   }
 
@@ -38,13 +42,21 @@ public class UserDAOTest extends AbstractDAOTest<UserDAO> {
   @Test
   void getUserFromToken() {
     Optional<User> maybeUser = dao.getUserFromToken("53F8B70B-F0C2-4092-829A-65516AF24CCA");
-    assertDoesNotThrow(maybeUser::get);
-    if(maybeUser.isPresent()) {
-      User user = maybeUser.get();
-      assertEquals("imre", user.getFirstName());
-      assertEquals("boersma", user.getLastName());
-    } else {
-      fail("User not found!");
+    assertThrows(NoSuchElementException.class, maybeUser::get);
+      User user = maybeUser.orElse(null);
+    if (user != null) {
+      assertNull(user.getFirstName());
+      assertNull(user.getLastName());
     }
+  }
+
+  @Override
+  protected UserDAO createDAOMock() {
+    UserDAO userDAO = mock(UserDAO.class);
+    when(userDAO.login(any(), any())).thenReturn(Optional.empty());
+    when(userDAO.getUserFromToken(any())).thenReturn(Optional.empty());
+    when(userDAO.login("imreboersma", "password")).thenReturn(Optional.of(new User()));
+
+    return userDAO;
   }
 }

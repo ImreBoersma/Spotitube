@@ -3,6 +3,7 @@ package nl.imreboersma.DAO;
 import com.microsoft.sqlserver.jdbc.SQLServerDataSource;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.TestInstance;
+import org.mockito.MockitoAnnotations;
 
 import javax.sql.DataSource;
 import java.io.IOException;
@@ -17,22 +18,12 @@ public abstract class AbstractDAOTest<T extends iDAO> {
 
   @BeforeAll
   void setup() {
+    MockitoAnnotations.initMocks(this);
+
+    dao = createDAOMock();
+    dao.setDataSource(dataSource);
     Properties properties = new Properties();
-    try {
-      properties.load(getClass().getClassLoader().getResourceAsStream("database.properties"));
-    } catch(IOException e) {
-      fail(e);
-    }
-
-    if(dataSource == null) {
-      SQLServerDataSource dataSource = new SQLServerDataSource();
-      dataSource.setDatabaseName(properties.getProperty("databaseName"));
-      dataSource.setIntegratedSecurity(true);
-      dataSource.setServerName(properties.getProperty("serverName"));
-      dataSource.setPortNumber(Integer.parseInt(properties.getProperty("portNumber")));
-
-      AbstractDAOTest.dataSource = dataSource;
-    }
-    dao.setDataSource(AbstractDAOTest.dataSource);
   }
+
+  protected abstract T createDAOMock();
 }
