@@ -27,13 +27,11 @@ jobs:
         java-version: '20'
         distribution: 'temurin'
         cache: maven
-    - name: LS
-      run: ls -a
     - name: Build
       run: mvn --batch-mode -DskipTests package --file spotitube/pom.xml
 
     - name: Test
-      run: mvn --batch-mode -Dmaven.test.failure.ignore=true test
+      run: mvn --batch-mode -Dmaven.test.failure.ignore=true test --file spotitube/pom.xml
 
     - name: Report
       uses: dorny/test-reporter@v1
